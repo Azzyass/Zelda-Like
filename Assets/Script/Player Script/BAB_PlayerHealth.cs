@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class BAB_PlayerHealth : MonoBehaviour
 {
     public GameObject player;
+    public BAB_PlayerController playerController;
+    public BAB_PlayerCombat playerCombat;
 
     public int currentHealth;
     public int numofHearts;
@@ -14,6 +17,7 @@ public class BAB_PlayerHealth : MonoBehaviour
 
     public Image[] hearts;
     public Sprite fullHeart;
+    public Sprite halfHeart;
     public Sprite emptyHeart;
 
     private void Start()
@@ -53,7 +57,7 @@ public class BAB_PlayerHealth : MonoBehaviour
             }
 
             // Ajoute ou supprime des coeurs 
-            if(i < numofHearts)
+            if (i < numofHearts)
             {
                 hearts[i].enabled = true;
             }
@@ -75,8 +79,16 @@ public class BAB_PlayerHealth : MonoBehaviour
 
     public void Death()
     {
-        player.SetActive(false);
+        playerController.enabled = false;
+        playerCombat.enabled = false;
         Debug.Log("YOU ARE DEAD");
+        StartCoroutine(GameOver(1f));
+    }
+
+    IEnumerator GameOver(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        SceneManager.LoadSceneAsync("BAB_Scene_Game_Over");
     }
 
 }
